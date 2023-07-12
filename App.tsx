@@ -4,23 +4,51 @@ import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import List from "./app/screens/List";
 import Details from "./app/screens/Details";
-import { onAuthStateChanged } from "firebase/auth";
-import Login from "./app/screens/SignInScreen";
-import SignInScreen from "./app/screens/SignInScreen";
+import { User, onAuthStateChanged } from "firebase/auth";
+import LoginScreen from "./app/screens/LoginScreen";
+import { useEffect, useState } from "react";
+import { firebase_auth } from "./firebaseConfig";
 
 const Stack = createNativeStackNavigator();
+const InsideStack = createNativeStackNavigator();
+
+function InsideLayout() {
+  return (
+    <InsideStack.Navigator>
+      <InsideStack.Screen name="MyTodos" component={List} />
+      <InsideStack.Screen name="Details" component={Details} />
+    </InsideStack.Navigator>
+  );
+}
 
 export default function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [initializing, setInitializing] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(firebase_auth, (user) => {
+      console.log("user", user);
+      setUser(user);
+      if (initializing) {
+        setInitializing(false);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  if (initializing) {
+    return null;
+  }
+
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen
-          name="Login"
-          component={SignInScreen}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen name="My Todos" component={List} />
-        <Stack.Screen name="Details" component={Details} />
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
+        
+          <Stack.Screen name="Login" component={LoginScreen} />
+        
+          <Stack.Screen name="List" component={List} />
+      
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TextInput,
   FlatList,
+  ImageBackground,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -70,7 +71,9 @@ const List = ({ navigation }: any) => {
     return (
       <View style={styles.todoContainer}>
         <TouchableOpacity onPress={toggleDone} style={styles.todo}>
-          {item.done && <Ionicons name="md-checkmark-circle"size={32} color="green" />}
+          {item.done && (
+            <Ionicons name="md-checkmark-circle" size={32} color="black" />
+          )}
           {!item.done && <Entypo name="circle" size={32} color={"black"} />}
           <Text style={styles.todoText}>{item.text}</Text>
         </TouchableOpacity>
@@ -85,52 +88,79 @@ const List = ({ navigation }: any) => {
   };
   return (
     <View style={styles.container}>
-      <View style={styles.form}>
-        <TextInput
-          style={styles.input}
-          placeholder="Add new todo"
-          onChangeText={(text: string) => setTodo(text)}
-          value={todo}
-        />
-        <Button onPress={addTodo} title="Add todo" disabled={todo === ""} />
-      </View>
-      {todos.length > 0 && (
-        <View>
-          <FlatList
-            data={todos}
-            renderItem={(item) => renderTodo(item)}
-            keyExtractor={(todo: Todo) => todo.id}
+      <ImageBackground
+        style={styles.backgroundImage}
+        source={{
+          uri: "https://firebasestorage.googleapis.com/v0/b/todo-app-695f4.appspot.com/o/team%20checklist-cuate.png?alt=media&token=eb204ee0-dcac-41ef-bfd8-e69776123a9e",
+        }}
+        resizeMode="cover"
+      >
+        <View style={styles.overlay} />
+        <View style={styles.contentContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Add new todo"
+            onChangeText={(text: string) => setTodo(text)}
+            value={todo}
           />
+          <Button onPress={addTodo} title="Add todo" disabled={todo === ""} />
+          {todos.length > 0 && (
+            <FlatList
+              data={todos}
+              renderItem={(item) => renderTodo(item)}
+              keyExtractor={(todo: Todo) => todo.id}
+              style={styles.flatList}
+            />
+          )}
         </View>
-      )}
+      </ImageBackground>
     </View>
   );
 };
 
 export default List;
+
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 20,
+    flex: 1,
+    //marginHorizontal: 20,
   },
-  form: {
-    marginVertical: 20,
-    flexDirection: "row",
+  contentContainer: {
+    flex: 1,
+    justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 20,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "transparent",
+  },
+  backgroundImage: {
+    flex: 1,
+    opacity: 0.5,
   },
   input: {
-    flex: 1,
+    width: "100%",
     height: 40,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 8,
     padding: 10,
-    backgroundColor: "#fff",
+    marginBottom: 10,
+  },
+  flatList: {
+    flex: 1,
+    width: "100%",
+    marginTop: 10,
   },
   todoContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     padding: 10,
     marginVertical: 4,
+    borderRadius: 12,
   },
   todoText: {
     flex: 1,
