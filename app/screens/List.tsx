@@ -103,7 +103,7 @@ const List = ({ navigation }: any) => {
             onChangeText={(text: string) => setTodo(text)}
             value={todo}
           />
-          <Button onPress={addTodo} title="Add todo" disabled={todo === ""} />
+          <Button onPress={addTodo} title="Add todo" disabled={todo === ""}  color="#FFC756"  />
           {todos.length > 0 && (
             <FlatList
               data={todos}
@@ -121,6 +121,10 @@ const List = ({ navigation }: any) => {
 export default List;
 
 const styles = StyleSheet.create({
+  addButton: {
+    borderRadius: 8,
+    backgroundColor: "transparent",
+  },
   container: {
     flex: 1,
     //marginHorizontal: 20,
@@ -138,7 +142,6 @@ const styles = StyleSheet.create({
   },
   backgroundImage: {
     flex: 1,
-    opacity: 0.5,
   },
   input: {
     width: "100%",
